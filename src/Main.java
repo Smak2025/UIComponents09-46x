@@ -1,3 +1,5 @@
+import ru.gr0946x.MainWindow;
+
 void main() {
-  $END$
+    (new MainWindow()).setVisible(true);
 }
