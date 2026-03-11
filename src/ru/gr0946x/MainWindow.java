@@ -1,6 +1,8 @@
 package ru.gr0946x;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
@@ -16,6 +18,9 @@ public class MainWindow extends JFrame {
     private JSpinner xMin;
     private JSpinner xMax;
 
+    private SpinnerNumberModel nmXMin;
+    private SpinnerNumberModel nmXMax;
+
     private JCheckBox cb1;
     private JCheckBox cb2;
 
@@ -24,7 +29,14 @@ public class MainWindow extends JFrame {
         setMinimumSize(new Dimension(600, 400));
         var gl = new GroupLayout(getContentPane());
         setLayout(gl);
-        mainPanel = new JPanel();
+        mainPanel = new JPanel(){
+            @Override
+            public void paint(Graphics g){
+                super.paint(g);
+                g.setColor(Color.RED);
+                g.fillOval(10, 10, 100, 150);
+            }
+        };
         mainPanel.setBackground(Color.WHITE);
         controlPanel = new JPanel();
         gl.setVerticalGroup(gl.createSequentialGroup()
@@ -49,8 +61,19 @@ public class MainWindow extends JFrame {
         lblXMin = new JLabel("xMin");
         lblXMax = new JLabel("xMax");
 
-        xMin = new JSpinner();
-        xMax = new JSpinner();
+        nmXMin = new SpinnerNumberModel(-5.0, -100.0, 4.9, 0.1);
+        nmXMax = new SpinnerNumberModel( 5.0, -4.9,   100, 0.1);
+
+        xMin = new JSpinner(nmXMin);
+        xMax = new JSpinner(nmXMax);
+
+        xMin.addChangeListener((e) -> {
+            nmXMax.setMinimum((double)nmXMin.getValue() + 0.1);
+        });
+
+        xMax.addChangeListener((e)->{
+            nmXMin.setMaximum((double)nmXMax.getValue() - 0.1);
+        });
 
         cb1 = new JCheckBox("Первая опция");
         cb2 = new JCheckBox("Вторая опция");
