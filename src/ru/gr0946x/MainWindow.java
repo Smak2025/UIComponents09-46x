@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+import static java.lang.Math.*;
 
 public class MainWindow extends JFrame {
 
@@ -24,20 +28,66 @@ public class MainWindow extends JFrame {
     private JCheckBox cb1;
     private JCheckBox cb2;
 
+    private boolean isPressed = false;
+    private ArrayList<Point> mousePt = new ArrayList<>();
+    private FunctionPainter fp;
+
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
         var gl = new GroupLayout(getContentPane());
         setLayout(gl);
+        InterpolationPolynomial p;
+        fp = new FunctionPainter(p::invoke);
         mainPanel = new JPanel(){
             @Override
             public void paint(Graphics g){
                 super.paint(g);
                 g.setColor(Color.RED);
                 g.fillOval(10, 10, 100, 150);
+                for (int i = 1; i < mousePt.size(); i++) {
+                    g.drawLine(
+                            mousePt.get(i).x,
+                            mousePt.get(i).y,
+                            mousePt.get(i-1).x,
+                            mousePt.get(i-1).y
+                    );
+                }
+                g.setColor(Color.BLUE);
+                fp.paint(g);
             }
         };
         mainPanel.setBackground(Color.WHITE);
+        mainPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                fp.setWidth(mainPanel.getWidth());
+                fp.setHeight(mainPanel.getHeight());
+            }
+        });
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isPressed = true;
+                mousePt.add(e.getPoint());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                isPressed = false;
+            }
+        });
+
+        mainPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                var g = mainPanel.getGraphics();
+                var currPt = e.getPoint();
+                //g.drawLine(mousePt.x, mousePt.y, currPt.x, currPt.y);
+                mousePt.add(currPt);
+                mainPanel.repaint();
+            }
+        });
         controlPanel = new JPanel();
         gl.setVerticalGroup(gl.createSequentialGroup()
                 .addGap(8)
