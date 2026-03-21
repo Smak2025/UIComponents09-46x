@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/UIComponents09-46x.iml" filepath="$PROJECT_DIR$/UIComponents09-46x.iml" />
+      <module fileurl="file://$PROJECT_DIR$/convertation/convertation.iml" filepath="$PROJECT_DIR$/convertation/convertation.iml" />
     </modules>
   </component>
 </project>

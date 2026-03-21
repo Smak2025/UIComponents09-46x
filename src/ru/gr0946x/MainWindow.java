@@ -1,11 +1,14 @@
 package ru.gr0946x;
 
+import ru.gr0946x.math.Lagrange;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.Math.*;
 
@@ -31,28 +34,29 @@ public class MainWindow extends JFrame {
     private boolean isPressed = false;
     private ArrayList<Point> mousePt = new ArrayList<>();
     private FunctionPainter fp;
+    private Lagrange poly = new Lagrange(new HashMap<>());
 
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
         var gl = new GroupLayout(getContentPane());
         setLayout(gl);
-        InterpolationPolynomial p;
-        fp = new FunctionPainter(p::invoke);
+
+        fp = new FunctionPainter(poly::invoke);
         mainPanel = new JPanel(){
             @Override
             public void paint(Graphics g){
                 super.paint(g);
-                g.setColor(Color.RED);
-                g.fillOval(10, 10, 100, 150);
-                for (int i = 1; i < mousePt.size(); i++) {
-                    g.drawLine(
-                            mousePt.get(i).x,
-                            mousePt.get(i).y,
-                            mousePt.get(i-1).x,
-                            mousePt.get(i-1).y
-                    );
-                }
+//                g.setColor(Color.RED);
+//                g.fillOval(10, 10, 100, 150);
+//                for (int i = 1; i < mousePt.size(); i++) {
+//                    g.drawLine(
+//                            mousePt.get(i).x,
+//                            mousePt.get(i).y,
+//                            mousePt.get(i-1).x,
+//                            mousePt.get(i-1).y
+//                    );
+//                }
                 g.setColor(Color.BLUE);
                 fp.paint(g);
             }
@@ -75,6 +79,14 @@ public class MainWindow extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 isPressed = false;
+            }
+            @Override
+            public void mouseClicked(MouseEvent e){
+                var pt = e.getPoint();
+                var x = fp.getConverter().xScr2Crt(pt.x);
+                var y = fp.getConverter().yScr2Crt(pt.y);
+                poly.addPoint(x, y);
+                mainPanel.repaint();
             }
         });
 

@@ -10,6 +10,9 @@ public class FunctionPainter {
     private int height;
 
     private Converter c;
+    public Converter getConverter(){
+        return c;
+    }
 
     public int getWidth() {
         return width;
@@ -31,7 +34,7 @@ public class FunctionPainter {
 
     public FunctionPainter(Function<Double, Double> f){
         this.f = f;
-        c = new Converter(-5.0, 5.0, -5.0, 5.0, 0, 0);
+        c = new Converter(-5.0, 5.0, -5.0, 5.0);
     }
     public void paint(Graphics g){
         for (int i = 0; i < width; i++){

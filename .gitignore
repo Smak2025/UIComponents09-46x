@@ -29,3 +29,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 /src/ru/gr0946x/Converter.java
+/convertation/src/ru/gr0946x/Converter.java
