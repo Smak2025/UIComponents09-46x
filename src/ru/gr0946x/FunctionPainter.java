@@ -9,7 +9,7 @@ public class FunctionPainter {
     private int width;
     private int height;
 
-    private Converter c;
+    private final Converter c;
     public Converter getConverter(){
         return c;
     }
